@@ -97,6 +97,15 @@
             height: 64px;
         }
 
+        .preview-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        #switch-camera-btn,
         #start-camera-btn {
             background: #e94560;
             border: none;
@@ -109,6 +118,7 @@
             transition: background 0.3s ease;
         }
 
+        #switch-camera-btn:hover,
         #start-camera-btn:hover {
             background: #d63454;
         }
@@ -304,7 +314,10 @@
                         <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
                     </svg>
                     <p>Live preview will appear here</p>
-                    <button id="start-camera-btn">Start Live</button>
+                    <div class="preview-buttons">
+                        <button id="switch-camera-btn" type="button">Use Back Camera</button>
+                        <button id="start-camera-btn">Start Live</button>
+                    </div>
                 </div>
                 <video id="preview-video" class="preview-video" autoplay muted></video>
             </div>
@@ -344,6 +357,7 @@
 
     <script>
         const startCameraBtn = document.getElementById('start-camera-btn');
+        const switchCameraBtn = document.getElementById('switch-camera-btn');
         const previewVideo = document.getElementById('preview-video');
         const previewPlaceholder = document.getElementById('preview-placeholder');
         const chatInput = document.getElementById('chat-input');
@@ -359,6 +373,7 @@
         let durationInterval = null;
         let viewerInterval = null;
         let peerConnection = null;
+        let currentFacingMode = 'user';
 
         // WebRTC configuration
         const rtcConfiguration = {
@@ -367,6 +382,38 @@
             ]
         };
 
+        function getCameraConstraints() {
+            return {
+                video: { facingMode: { ideal: currentFacingMode } },
+                audio: true
+            };
+        }
+
+        function stopStream() {
+            if (!stream) return;
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+
+        async function openCameraPreview() {
+            stopStream();
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(getCameraConstraints());
+                previewVideo.srcObject = stream;
+                previewVideo.style.display = 'block';
+                previewPlaceholder.style.display = 'none';
+            } catch (error) {
+                console.error('Could not open camera:', error);
+                alert('Unable to access camera with the selected mode. Please try a different camera.');
+            }
+        }
+
+        function updateSwitchButton() {
+            switchCameraBtn.textContent = currentFacingMode === 'user' ? 'Use Back Camera' : 'Use Front Camera';
+        }
+
+        updateSwitchButton();
+
         // Start camera preview and go live immediately
         startCameraBtn.addEventListener('click', async () => {
             if (isLive) {
@@ -374,14 +421,12 @@
             }
 
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true
-                });
+                await openCameraPreview();
 
-                previewVideo.srcObject = stream;
-                previewVideo.style.display = 'block';
-                previewPlaceholder.style.display = 'none';
+                if (!stream) {
+                    throw new Error('No camera stream available');
+                }
+
                 startCameraBtn.textContent = 'Live';
                 startCameraBtn.disabled = true;
 
@@ -431,15 +476,21 @@
                 console.error('Error starting live stream:', error);
                 alert('Unable to start live stream: ' + error.message);
                 // Reset on error
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                }
+                stopStream();
                 previewVideo.style.display = 'none';
                 previewPlaceholder.style.display = 'block';
                 startCameraBtn.textContent = 'Start Live';
                 startCameraBtn.disabled = false;
                 isLive = false;
+            }
+        });
+
+        switchCameraBtn.addEventListener('click', async () => {
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            updateSwitchButton();
+
+            if (stream && !isLive) {
+                await openCameraPreview();
             }
         });
 
