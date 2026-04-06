@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Watch Live - The Word of God Apostolic Deliverance Vineyard Church</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .live-container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .video-wrapper {
+            flex: 1;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .live-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%);
+            z-index: 10;
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .channel-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff8c42, #ff6b42);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .channel-details h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .channel-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .side-actions {
+            position: absolute;
+            right: 0;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem 0.75rem;
+            z-index: 10;
+        }
+
+        .action-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-direction: column;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        .action-count {
+            font-size: 0.65rem;
+            margin-top: 0.15rem;
+        }
+
+        .action-button.like-btn {
+            background: rgba(255, 200, 124, 0.2);
+        }
+
+        .action-button.like-btn:hover {
+            background: rgba(255, 140, 66, 0.4);
+        }
+
+        .action-button.share-btn {
+            background: rgba(100, 200, 255, 0.2);
+        }
+
+        .action-button.share-btn:hover {
+            background: rgba(100, 200, 255, 0.4);
+        }
+
+        .chat-section {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            max-height: 180px;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-message {
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .message-user {
+            font-weight: 600;
+            color: #ff8c42;
+        }
+
+        .message-text {
+            color: #ccc;
+        }
+
+        .input-section {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 0.65rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .chat-input::placeholder {
+            color: #888;
+        }
+
+        .send-button {
+            background: #ff8c42;
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .send-button:hover {
+            background: #ff7722;
+        }
+
+        @media (max-width: 768px) {
+            .side-actions {
+                bottom: 200px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .action-button {
+                width: 44px;
+                height: 44px;
+                font-size: 1.2rem;
+            }
+
+            .chat-section {
+                max-height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="live-container">
+        <div class="video-wrapper">
+            <button class="back-button" onclick="window.location.href='index.html'">←</button>
+            
+            <div class="live-header">
+                <div class="channel-info">
+                    <div class="channel-avatar">W</div>
+                    <div class="channel-details">
+                        <h3>Word of God Vineyard</h3>
+                        <p id="live-status-text">Stream offline</p>
+                    </div>
+                </div>
+            </div>
+
+            <video id="live-video" autoplay muted></video>
+
+            <div class="side-actions">
+                <button class="action-button like-btn" onclick="addLike()">
+                    <span>❤️</span>
+                    <span class="action-count" id="like-count">0</span>
+                </button>
+                <button class="action-button share-btn" onclick="shareStream()">
+                    <span>📤</span>
+                    <span class="action-count">Share</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <div id="chat-messages">
+                <div class="chat-message">
+                    <span class="message-user">Sister Mary:</span>
+                    <span class="message-text">Blessed to be here! 🙏</span>
+                </div>
+                <div class="chat-message">
+                    <span class="message-user">Brother John:</span>
+                    <span class="message-text">Glory to God! Enjoying the service</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <input type="text" class="chat-input" placeholder="Send a message..." id="message-input">
+            <button class="send-button" onclick="sendMessage()">→</button>
+        </div>
+    </div>
+
+    <script>
+        let likeCount = 0;
+
+        function addLike() {
+            likeCount += 1;
+            document.getElementById('like-count').textContent = likeCount;
+            const btn = event.target.closest('.like-btn');
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(() => {
+                btn.style.transform = 'scale(1.1)';
+            }, 200);
+        }
+
+        function shareStream() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'The Word of God Vineyard Church',
+                    text: 'Join us for live worship and prayer!',
+                    url: window.location.href
+                });
+            } else {
+                alert('Share this link: ' + window.location.href);
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (message) {
+                const chatDiv = document.getElementById('chat-messages');
+                const msgEl = document.createElement('div');
+                msgEl.className = 'chat-message';
+                msgEl.innerHTML = `<span class="message-user">You:</span> <span class="message-text">${message}</span>`;
+                chatDiv.appendChild(msgEl);
+                chatDiv.scrollTop = chatDiv.scrollHeight;
+                input.value = '';
+            }
+        }
+
+        document.getElementById('message-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        async function fetchLiveStatus() {
+            try {
+                // Detect environment and use appropriate backend URL
+                const isGitHubPages = window.location.hostname === 'ayo454.github.io';
+                const backendOrigin = isGitHubPages
+                    ? 'https://the-word-of-god-deliverance-vinyard.onrender.com' // Replace with your deployed Render URL
+                    : 'http://127.0.0.1:5000';
+
+                const response = await fetch(`${backendOrigin}/status`);
+
+                if (!response.ok) {
+                    throw new Error(`Status API returned ${response.status}`);
+                }
+
+                const data = await response.json();
+                const statusText = document.getElementById('live-status-text');
+
+                if (data.live) {
+                    statusText.textContent = '🔴 LIVE NOW';
+                    // Start WebRTC connection if not already connected
+                    if (!window.peerConnection) {
+                        await startWebRTCViewer();
+                    }
+                } else {
+                    statusText.textContent = 'Stream offline';
+                    const liveVideo = document.getElementById('live-video');
+                    liveVideo.srcObject = null;
+                    if (window.peerConnection) {
+                        window.peerConnection.close();
+                        window.peerConnection = null;
+                    }
+                }
+            } catch (error) {
+                console.error('Unable to fetch live status:', error);
+                const statusText = document.getElementById('live-status-text');
+                if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
+                    statusText.textContent = 'Connection error - check server';
+                } else {
+                    statusText.textContent = 'Stream offline';
+                }
+            }
+        }
+
+        // WebRTC viewer function
+        async function startWebRTCViewer() {
+            try {
+                const isGitHubPages = window.location.hostname === 'ayo454.github.io';
+                const backendOrigin = isGitHubPages
+                    ? 'https://the-word-of-god-deliverance-vinyard.onrender.com' // Replace with your deployed Render URL
+                    : 'http://127.0.0.1:5000';
+
+                const rtcConfiguration = {
+                    iceServers: [
+                        { urls: 'stun:stun.l.google.com:19302' }
+                    ]
+                };
+
+                window.peerConnection = new RTCPeerConnection(rtcConfiguration);
+                const liveVideo = document.getElementById('live-video');
+
+                // Handle incoming stream
+                window.peerConnection.ontrack = (event) => {
+                    if (event.streams && event.streams[0]) {
+                        liveVideo.srcObject = event.streams[0];
+                    }
+                };
+
+                // Get offer from broadcaster
+                const offerResponse = await fetch(`${backendOrigin}/webrtc/offer`);
+                const offer = await offerResponse.json();
+
+                if (offer.type && offer.sdp) {
+                    await window.peerConnection.setRemoteDescription(offer);
+
+                    // Create answer
+                    const answer = await window.peerConnection.createAnswer();
+                    await window.peerConnection.setLocalDescription(answer);
+
+                    // Send answer back
+                    await fetch(`${backendOrigin}/webrtc/answer`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(answer)
+                    });
+
+                    // Get ICE candidates
+                    const candidatesResponse = await fetch(`${backendOrigin}/webrtc/candidates`);
+                    const candidates = await candidatesResponse.json();
+
+                    // Add remote ICE candidates
+                    for (const candidate of candidates) {
+                        if (candidate.candidate) {
+                            await window.peerConnection.addIceCandidate(candidate);
+                        }
+                    }
+                }
+
+                console.log('WebRTC viewer started');
+            } catch (error) {
+                console.error('WebRTC viewer error:', error);
+            }
+        }
+
+        fetchLiveStatus();
+        setInterval(fetchLiveStatus, 3000);
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (window.peerConnection) {
+                window.peerConnection.close();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Panel - The Word of God Apostolic Deliverance Vineyard Church</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="dashboard-shell">
+        <aside class="sidebar">
+            <div class="brand-panel">
+                <div class="brand-icon">W</div>
+                <div>
+                    <h2>LOGO</h2>
+                    <p>Media Panel</p>
+                </div>
+            </div>
+
+            <nav class="menu">
+                <a class="menu-link active" href="#">Dashboard</a>
+                <a class="menu-link" href="#live-section">Live</a>
+                <a class="menu-link" href="#library-section">Library</a>
+                <a class="menu-link" href="#upload-section">Upload</a>
+                <a class="menu-link" href="#settings-section">Settings</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>Church media workspace</p>
+            </div>
+        </aside>
+
+        <div class="main-area">
+            <header class="topbar">
+                <div>
+                    <h1>Media Dashboard</h1>
+                    <p>Manage live video, library uploads, and publish content to your own media platform and TikTok.</p>
+                </div>
+                <div class="topbar-actions">
+                    <button class="icon-button">🔔</button>
+                    <button class="icon-button">⚙️</button>
+                </div>
+            </header>
+
+            <section class="stats-row">
+                <div class="stat-card red">
+                    <p>Live viewers</p>
+                    <strong>1.2K</strong>
+                </div>
+                <div class="stat-card green">
+                    <p>Uploads</p>
+                    <strong>24</strong>
+                </div>
+                <div class="stat-card orange">
+                    <p>Published</p>
+                    <strong>58</strong>
+                </div>
+                <div class="stat-card blue">
+                    <p>Shares</p>
+                    <strong>342</strong>
+                </div>
+            </section>
+
+            <section class="content-grid">
+                <article class="card live-card" id="live-section">
+                    <div class="card-header">
+                        <div>
+                            <p class="small-label">Live Stream</p>
+                            <h2>Watch Live Now</h2>
+                        </div>
+                        <button class="pill-button" id="go-live-btn">Go Live</button>
+                    </div>
+                    <div class="url-input-section">
+                        <label for="stream-url">Paste video URL here:</label>
+                        <input type="text" id="stream-url" placeholder="Enter video file URL or path..." class="stream-url-input">
+                    </div>
+                    <div class="live-preview">
+                        <video id="live-video" controls>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <span class="live-dot">LIVE</span>
+                    </div>
+                    <div class="live-footer">
+                        <div>
+                            <p>Current service: Sunday worship</p>
+                            <span id="stream-time">Waiting to start...</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card upload-card" id="upload-section">
+                    <div class="card-header">
+                        <div>
+                            <p class="small-label">Upload</p>
+                            <h2>Upload New Video</h2>
+                        </div>
+                    </div>
+                    <p class="card-text">Select a recorded sermon, praise clip, or testimony to upload and prepare for publishing on your own media platform or TikTok.</p>
+                    <label class="file-picker">
+                        <input type="file" id="media-upload" accept="video/*">
+                        Choose video file
+                    </label>
+                    <div class="upload-actions">
+                        <button class="secondary-button" id="preview-button">Preview</button>
+                        <button class="primary-button" id="publish-button">Publish to OwnTube</button>
+                    </div>
+                </article>
+            </section>
+
+            <section class="library-section" id="library-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Video Library</h2>
+                        <p>Saved clips ready for editing and publishing.</p>
+                    </div>
+                    <button class="secondary-button">Manage Library</button>
+                </div>
+
+                <div class="library-grid">
+                    <article class="video-card">
+                        <div class="video-thumb">▶</div>
+                        <div>
+                            <h3>Sunday Sermon</h3>
+                            <p>Teaching on faith and healing.</p>
+                        </div>
+                        <button class="mini-button">Edit</button>
+                    </article>
+                    <article class="video-card">
+                        <div class="video-thumb">▶</div>
+                        <div>
+                            <h3>Prayer Moment</h3>
+                            <p>Guided church prayer session.</p>
+                        </div>
+                        <button class="mini-button">Edit</button>
+                    </article>
+                    <article class="video-card">
+                        <div class="video-thumb">▶</div>
+                        <div>
+                            <h3>Choir Worship</h3>
+                            <p>Music clip for TikTok.</p>
+                        </div>
+                        <button class="mini-button">Edit</button>
+                    </article>
+                    <article class="video-card">
+                        <div class="video-thumb">▶</div>
+                        <div>
+                            <h3>Testimony Story</h3>
+                            <p>Member testimony video.</p>
+                        </div>
+                        <button class="mini-button">Edit</button>
+                    </article>
+                </div>
+            </section>
+
+            <section class="settings-panel" id="settings-section">
+                <div class="card">
+                    <div class="section-header">
+                        <div>
+                            <h2>Publish Settings</h2>
+                            <p>Save default tags and publishing channels.</p>
+                        </div>
+                        <button class="secondary-button">Save</button>
+                    </div>
+                    <div class="settings-grid">
+                        <label>
+                            <span>Default tags</span>
+                            <input type="text" placeholder="#faith #live #church">
+                        </label>
+                        <label>
+                            <span>Publish target</span>
+                            <select>
+                                <option>OwnTube</option>
+                                <option>TikTok</option>
+                                <option>Instagram</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(180deg, #0f243f 0%, #132c4f 48%, #1b3d6e 100%);
+    color: #f5f7fb;
+    min-height: 100vh;
+}
+
+header {
+    padding: 1.5rem 1rem;
+    text-align: center;
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 5vw, 3.2rem);
+    letter-spacing: 0.03em;
+}
+
+header p {
+    margin: 0.75rem auto 0;
+    max-width: 700px;
+    line-height: 1.6;
+    color: #dfe7f2;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    padding-bottom: 4rem;
+}
+
+.hero {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-card {
+    width: 100%;
+    max-width: 960px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-top h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+.hero-top p {
+    margin: 0.5rem 0 0;
+    line-height: 1.6;
+    color: #e9eff9;
+    font-size: 0.95rem;
+}
+
+.status-badge {
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.status-badge.live {
+    background: #ff8c42;
+    color: #fff;
+}
+
+.status-badge.live:hover {
+    background: #ff7722;
+    transform: translateY(-2px);
+}
+
+.stream-note {
+    margin-top: 1rem;
+    color: #cfd8e6;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 1.25rem;
+}
+
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+}
+
+.card p {
+    color: #d8e2f1;
+    line-height: 1.6;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+footer {
+    text-align: center;
+    color: #c4d0e6;
+    margin-top: 2rem;
+    padding: 1.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: 0.75rem;
+        padding-bottom: 3rem;
+    }
+
+    .hero-card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .hero-top {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .status-badge {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    header {
+        padding: 1rem 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.3rem;
+    }
+
+    header p {
+        font-size: 0.85rem;
+        margin: 0.5rem auto 0;
+    }
+
+    .hero-card {
+        padding: 0.75rem;
+        border-radius: 12px;
+    }
+
+    .hero-top h2 {
+        font-size: 1.1rem;
+    }
+
+    .hero-top p {
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .card h3 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .card p {
+        font-size: 0.85rem;
+    }
+
+    .stream-note {
+        font-size: 0.85rem;
+        margin-top: 0.75rem;
+    }
+
+    footer {
+        font-size: 0.75rem;
+        padding: 1rem 0.5rem;
+    }
+}
