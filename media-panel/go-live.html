@@ -558,6 +558,15 @@
                     body: JSON.stringify(offer)
                 });
 
+                console.log('Offer sent, waiting for viewer answer...');
+
+                // Wait for viewer's answer
+                const answer = await waitForViewerAnswer(backendOrigin);
+                if (answer.type && answer.sdp) {
+                    await peerConnection.setRemoteDescription(answer);
+                    console.log('Viewer answer received and applied');
+                }
+
                 // Listen for ICE candidates from the viewer
                 peerConnection.onicecandidate = (event) => {
                     if (event.candidate) {
