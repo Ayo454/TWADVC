@@ -338,6 +338,9 @@
             }
         });
 
+        let broadcasterCandidatesAdded = new Set();
+        let broadcasterCandidateInterval = null;
+
         async function fetchLiveStatus() {
             try {
                 // Detect environment and use appropriate backend URL
@@ -381,6 +384,23 @@
             }
         }
 
+        async function pollBroadcasterCandidates(backendOrigin) {
+            if (!window.peerConnection) return;
+            try {
+                const candidatesResponse = await fetch(`${backendOrigin}/webrtc/candidates`);
+                const candidates = await candidatesResponse.json();
+
+                for (const candidate of candidates) {
+                    if (candidate.candidate && !broadcasterCandidatesAdded.has(candidate.candidate)) {
+                        await window.peerConnection.addIceCandidate(candidate);
+                        broadcasterCandidatesAdded.add(candidate.candidate);
+                    }
+                }
+            } catch (error) {
+                console.error('Error polling broadcaster candidates:', error);
+            }
+        }
+
         // WebRTC viewer function
         async function startWebRTCViewer() {
             try {
@@ -405,6 +425,19 @@
                     }
                 };
 
+                // Send viewer ICE candidates to backend
+                window.peerConnection.onicecandidate = async (event) => {
+                    if (event.candidate) {
+                        await fetch(`${backendOrigin}/webrtc/viewer-candidate`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(event.candidate)
+                        });
+                    }
+                };
+
                 // Get offer from broadcaster
                 const offerResponse = await fetch(`${backendOrigin}/webrtc/offer`);
                 const offer = await offerResponse.json();
@@ -425,16 +458,9 @@
                         body: JSON.stringify(answer)
                     });
 
-                    // Get ICE candidates
-                    const candidatesResponse = await fetch(`${backendOrigin}/webrtc/candidates`);
-                    const candidates = await candidatesResponse.json();
-
-                    // Add remote ICE candidates
-                    for (const candidate of candidates) {
-                        if (candidate.candidate) {
-                            await window.peerConnection.addIceCandidate(candidate);
-                        }
-                    }
+                    // Add any existing broadcaster ICE candidates
+                    await pollBroadcasterCandidates(backendOrigin);
+                    broadcasterCandidateInterval = setInterval(() => pollBroadcasterCandidates(backendOrigin), 2000);
                 }
 
                 console.log('WebRTC viewer started');
@@ -450,6 +476,9 @@
         window.addEventListener('beforeunload', () => {
             if (window.peerConnection) {
                 window.peerConnection.close();
+            }
+            if (broadcasterCandidateInterval) {
+                clearInterval(broadcasterCandidateInterval);
             }
         });
     </script>

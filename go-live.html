@@ -373,6 +373,8 @@
         let durationInterval = null;
         let viewerInterval = null;
         let peerConnection = null;
+        let viewerCandidatesAdded = new Set();
+        let viewerCandidateInterval = null;
         let currentFacingMode = 'user';
 
         // WebRTC configuration
@@ -413,6 +415,23 @@
         }
 
         updateSwitchButton();
+
+        async function pollViewerCandidates(backendOrigin) {
+            if (!peerConnection) return;
+            try {
+                const response = await fetch(`${backendOrigin}/webrtc/viewer-candidates`);
+                const candidates = await response.json();
+
+                for (const candidate of candidates) {
+                    if (candidate.candidate && !viewerCandidatesAdded.has(candidate.candidate)) {
+                        await peerConnection.addIceCandidate(candidate);
+                        viewerCandidatesAdded.add(candidate.candidate);
+                    }
+                }
+            } catch (error) {
+                console.error('Error polling viewer candidates:', error);
+            }
+        }
 
         // Start camera preview and go live immediately
         startCameraBtn.addEventListener('click', async () => {
@@ -521,7 +540,7 @@
                     body: JSON.stringify(offer)
                 });
 
-                // Listen for ICE candidates
+                // Listen for ICE candidates from the viewer
                 peerConnection.onicecandidate = (event) => {
                     if (event.candidate) {
                         fetch(`${backendOrigin}/webrtc/candidate`, {
@@ -533,6 +552,13 @@
                         });
                     }
                 };
+
+                // Poll viewer ICE candidates and add them to the broadcaster connection
+                await pollViewerCandidates(backendOrigin);
+                if (viewerCandidateInterval) {
+                    clearInterval(viewerCandidateInterval);
+                }
+                viewerCandidateInterval = setInterval(() => pollViewerCandidates(backendOrigin), 2000);
 
                 console.log('WebRTC streaming started');
             } catch (error) {

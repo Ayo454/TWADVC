@@ -33,7 +33,8 @@ def load_signaling_data():
     return {
         'offer': None,
         'answer': None,
-        'candidates': []
+        'candidates': [],
+        'viewer_candidates': []
     }
 
 def save_signaling_data(data):
@@ -94,30 +95,50 @@ def stop_live():
     signaling_data['offer'] = None
     signaling_data['answer'] = None
     signaling_data['candidates'] = []
+    signaling_data['viewer_candidates'] = []
     save_signaling_data(signaling_data)
     return jsonify(live=False)
 
 # WebRTC signaling endpoints
-@app.route('/webrtc/offer', methods=['POST'])
+@app.route('/webrtc/offer', methods=['POST', 'OPTIONS'])
 def webrtc_offer():
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'})
     data = request.get_json()
     signaling_data['offer'] = data
     save_signaling_data(signaling_data)
     return jsonify({'status': 'ok'})
 
-@app.route('/webrtc/answer', methods=['POST'])
+@app.route('/webrtc/answer', methods=['POST', 'OPTIONS'])
 def webrtc_answer():
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'})
     data = request.get_json()
     signaling_data['answer'] = data
     save_signaling_data(signaling_data)
     return jsonify({'status': 'ok'})
 
-@app.route('/webrtc/candidate', methods=['POST'])
+@app.route('/webrtc/candidate', methods=['POST', 'OPTIONS'])
 def webrtc_candidate():
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'})
     data = request.get_json()
     signaling_data['candidates'].append(data)
     save_signaling_data(signaling_data)
     return jsonify({'status': 'ok'})
+
+@app.route('/webrtc/viewer-candidate', methods=['POST', 'OPTIONS'])
+def webrtc_viewer_candidate():
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'})
+    data = request.get_json()
+    signaling_data['viewer_candidates'].append(data)
+    save_signaling_data(signaling_data)
+    return jsonify({'status': 'ok'})
+
+@app.route('/webrtc/viewer-candidates')
+def get_viewer_candidates():
+    return jsonify(signaling_data['viewer_candidates'])
 
 @app.route('/webrtc/offer')
 def get_offer():
